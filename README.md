@@ -1,34 +1,58 @@
+[update-readmes]   Mode: rewrite — migrating to template structure...
 # Gitr
 
-The Git sister of [Diffr](https://github.com/crussella0129/Diffr) — **Gitr** is a Rust CLI tool for managing git repos across multiple hosting services (GitHub, GitLab, Gitea, Bitbucket, Azure DevOps). It discovers your repos via API and filesystem scan, tracks fork relationships, and keeps everything in sync with configurable merge strategies.
+[![Built with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/Interested-Deving-1896/Gitr)
 
-## Quick Start
+<!-- AI:start:what-it-does -->
+This project provides a tool for managing and synchronizing multiple Git repositories and forks across various Git hosting platforms, including GitHub, GitLab, and Gitea. It automates the process of pulling updates and pushing changes, streamlining workflows for developers and teams working with large collections of repositories.
+<!-- AI:end:what-it-does -->
+
+## Architecture
+
+<!-- AI:start:architecture -->
+The architecture consists of modular crates, each responsible for specific functionality. These crates interact through shared dependencies and a workspace configuration defined in `Cargo.toml`. The key components are:
+
+- `gitr-core`: Implements core logic for repository management.
+- `gitr-auth`: Handles authentication across supported Git hosts.
+- `gitr-db`: Manages local database storage for repository metadata.
+- `gitr-host`: Abstracts interactions with different Git hosting services.
+- `gitr-discover`: Discovers repositories across local and remote sources.
+- `gitr-sync`: Executes pull/push operations across repositories.
+- `gitr-cli`: Provides the command-line interface for user interaction.
+
+The crates use shared libraries such as `serde` for serialization, `tokio` for asynchronous operations, and `rusqlite` for database access. The directory structure is organized as follows:
+
+```plaintext
+.
+├── Cargo.lock
+├── Cargo.toml
+├── LICENSE
+├── README.md
+├── .gitignore
+└── crates
+    ├── gitr-core
+    ├── gitr-auth
+    ├── gitr-db
+    ├── gitr-host
+    ├── gitr-discover
+    ├── gitr-sync
+    └── gitr-cli
+```
+
+Each crate is self-contained and contributes to the overall functionality of the tool. The workspace configuration ensures consistent dependency management and builds.
+<!-- AI:end:architecture -->
+
+## Install
+
+<!-- Add installation instructions here. This section is yours — the AI will not modify it. -->
 
 ```bash
-# Build from source
-cargo build --release -p gitr-cli
-
-# Initialize config and database
-gitr config init
-
-# Register your GitHub account (stores token in OS keychain)
-gitr host add gh --provider github --user <your-username> --token <your-pat>
-
-# Discover all your repos (including forks)
-gitr scan --host gh
-
-# See what's out of date
-gitr status
-
-# Sync a single fork
-gitr sync <repo-name> --dry-run   # preview first
-gitr sync <repo-name>             # fast-forward + push
-
-# Sync all forks at once
-gitr sync all
+git clone https://github.com/Interested-Deving-1896/Gitr.git
+cd Gitr
 ```
 
 ## Usage
+
 
 ### Configuration
 
@@ -130,42 +154,54 @@ gitr history <repo>              # history for a specific repo
 gitr history --limit 50          # show more records
 ```
 
-## Architecture
+## Configuration
 
-7-crate Rust workspace:
+<!-- Document configuration options here. This section is yours — the AI will not modify it. -->
+
+## CI
+
+<!-- AI:start:ci -->
+- **`ci.yml`**: Runs on every push and pull request. It checks formatting using `cargo fmt`, runs linter checks with `cargo clippy`, and executes tests across all workspace crates using `cargo test`. No secrets are required.
+
+- **`release.yml`**: Triggers on new Git tags. Builds release binaries for Linux, macOS, and Windows using `cargo build --release`. Uploads the artifacts to the GitHub release. No secrets are required.
+
+- **`audit.yml`**: Runs on a weekly schedule. Executes `cargo audit` to check for vulnerabilities in dependencies. No secrets are required.
+<!-- AI:end:ci -->
+
+## Mirror chain
+
+<!-- AI:start:mirror-chain -->
+This repo is maintained in [`Interested-Deving-1896/Gitr`](https://github.com/Interested-Deving-1896/Gitr) and mirrored through:
 
 ```
-gitr-core      Shared models, config, error types
-gitr-auth      OS keychain credential management (keyring crate)
-gitr-db        SQLite (WAL mode) schema, migrations, CRUD
-gitr-host      HostProvider trait + GitHub implementation
-gitr-discover  Filesystem scanner + API discovery + reconciliation
-gitr-sync      Git CLI wrappers, fork sync executor, parallel engine
-gitr-cli       Clap CLI with all commands
+Interested-Deving-1896/Gitr  ──►  OpenOS-Project-OSP/Gitr  ──►  OpenOS-Project-Ecosystem-OOC/Gitr
 ```
 
-Git operations shell out to `git` via `std::process::Command` (not libgit2) for maximum compatibility with SSH keys, credential helpers, and GPG signing.
+Changes flow downstream automatically via the hourly mirror chain in
+[`fork-sync-all`](https://github.com/Interested-Deving-1896/fork-sync-all).
+Direct commits to OSP or OOC are detected and opened as PRs back to `Interested-Deving-1896`.
+<!-- AI:end:mirror-chain -->
 
-## Roadmap
+## Contributors
 
-### Phase 2: Multi-Host & Mirroring
-- GitLab, Gitea, Bitbucket, Azure DevOps provider implementations
-- Cross-host sync links (`gitr link add source target`)
-- Any-to-any mirroring with directed sync graph
-- Cycle detection and topological execution order
+<!-- AI:start:contributors -->
+_Contributors pending._
+<!-- AI:end:contributors -->
 
-### Phase 3: TUI & Daemon
-- Ratatui interactive dashboard (`gitr status --watch`)
-- Scheduled auto-sync via cron expressions
-- systemd / launchd service integration
-- Desktop notifications on sync failures
+## Origins
 
-### Phase 4: Collections & Advanced
-- User-defined repo collections (`gitr collection create`, `gitr collection add`)
-- Branch filtering (include/exclude patterns)
-- Transform rules (branch renaming, path filtering)
-- Webhook-triggered sync
+<!-- AI:start:origins -->
+_Original project — no upstream fork._
+<!-- AI:end:origins -->
+
+## Resources
+
+<!-- AI:start:resources -->
+_No additional resource files found._
+<!-- AI:end:resources -->
 
 ## License
 
-See [LICENSE](LICENSE) for details.
+<!-- AI:start:license -->
+[GPL-3.0](https://github.com/Interested-Deving-1896/Gitr/blob/main/LICENSE) © 2026 [Interested-Deving-1896](https://github.com/Interested-Deving-1896)
+<!-- AI:end:license -->
